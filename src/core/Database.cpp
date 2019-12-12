@@ -35,6 +35,7 @@
 #include <QTemporaryFile>
 #include <QTimer>
 #include <QXmlStreamReader>
+#include <QtDebug>
 
 QHash<QUuid, QPointer<Database>> Database::s_uuidMap;
 
@@ -146,16 +147,25 @@ bool Database::open(const QString& filePath, QSharedPointer<const CompositeKey> 
         return false;
     }
 
+    qDebug() << "Got here 1";
+
     setReadOnly(readOnly);
     setFilePath(filePath);
     dbFile.close();
+    qDebug() << "Got here 2";
 
     markAsClean();
+    qDebug() << "Got here 3";
 
     m_initialized = true;
+    qDebug() << "Got here 4";
     emit databaseOpened();
+    qDebug() << "Got here 5";
     m_fileWatcher->start(canonicalFilePath(), 30, 1);
+    qDebug() << "Got here 6";
     setEmitModified(true);
+    qDebug() << "Got here 7";
+    
 
     return true;
 }

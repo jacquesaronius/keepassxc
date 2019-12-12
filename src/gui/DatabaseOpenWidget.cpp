@@ -38,6 +38,7 @@
 #include <QFont>
 #include <QSharedPointer>
 #include <QtConcurrentRun>
+#include <QtDebug>
 
 DatabaseOpenWidget::DatabaseOpenWidget(QWidget* parent)
     : DialogyWidget(parent)

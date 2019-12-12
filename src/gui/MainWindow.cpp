@@ -571,6 +571,7 @@ void MainWindow::clearLastDatabases()
 
 void MainWindow::openDatabase(const QString& filePath, const QString& password, const QString& keyfile)
 {
+    qDebug("Opening database!!!");
     m_ui->tabWidget->addDatabaseTab(filePath, false, password, keyfile);
 }
 

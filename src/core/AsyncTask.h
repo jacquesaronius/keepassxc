@@ -39,11 +39,18 @@ namespace AsyncTask
     waitForFuture(QFuture<typename std::result_of<FunctionObject()>::type> future)
     {
         QEventLoop loop;
+        qDebug("WaitForFuture 1");
         QFutureWatcher<typename std::result_of<FunctionObject()>::type> watcher;
+        qDebug("WaitForFuture 2");
         QObject::connect(&watcher, SIGNAL(finished()), &loop, SLOT(quit()));
+        qDebug("WaitForFuture 3");
         watcher.setFuture(future);
+        qDebug("WaitForFuture 4");
         loop.exec();
-        return future.result();
+        qDebug("WaitForFuture 5");
+        auto x = future.result();
+        qDebug("WaitForFuture 6");
+        return x;
     }
 
     /**

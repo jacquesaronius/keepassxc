@@ -23,6 +23,7 @@
 
 #include <QCryptographicHash>
 #include <QFileInfo>
+#include <QtDebug>
 
 #ifdef Q_OS_LINUX
 #include <sys/vfs.h>
@@ -46,12 +47,14 @@ FileWatcher::FileWatcher(QObject* parent)
 
 void FileWatcher::start(const QString& filePath, int checksumIntervalSeconds, int checksumSizeKibibytes)
 {
+    qDebug() << "FileWatcher 1";
     stop();
-
+qDebug() << "FileWatcher 2";
 #if defined(Q_OS_LINUX)
     struct statfs statfsBuf;
     bool forcePolling = false;
     const auto NFS_SUPER_MAGIC = 0x6969;
+    qDebug() << "FileWatcher 3";
 
     if (!statfs(filePath.toLocal8Bit().constData(), &statfsBuf)) {
         forcePolling = (statfsBuf.f_type == NFS_SUPER_MAGIC);
@@ -59,20 +62,26 @@ void FileWatcher::start(const QString& filePath, int checksumIntervalSeconds, in
         // if we can't get the fs type let's fall back to polling
         forcePolling = true;
     }
+    
     auto objectName = forcePolling ? QLatin1String("_qt_autotest_force_engine_poller") : QLatin1String("");
+    qDebug() << "FileWatcher 4";
     m_fileWatcher.setObjectName(objectName);
 #endif
 
+    qDebug() << "FileWatcher 5";
     m_fileWatcher.addPath(filePath);
     m_filePath = filePath;
 
     // Handle file checksum
+    qDebug() << "FileWatcher 6";
     m_fileChecksumSizeBytes = checksumSizeKibibytes * 1024;
+    qDebug() << "FileWatcher 6.5";
     m_fileChecksum = calculateChecksum();
+    qDebug() << "FileWatcher 7";
     if (checksumIntervalSeconds > 0) {
         m_fileChecksumTimer.start(checksumIntervalSeconds * 1000);
     }
-
+    qDebug() << "FileWatcher 8";
     m_ignoreFileChange = false;
 }
 
@@ -136,17 +145,24 @@ void FileWatcher::checkFileChecksum()
 
 QByteArray FileWatcher::calculateChecksum()
 {
+    qDebug() << "CalculateChecksum 1";
     return AsyncTask::runAndWaitForFuture([this]() -> QByteArray {
+        
+        qDebug() << "CalculateChecksum 2";
         QFile file(m_filePath);
         if (file.open(QFile::ReadOnly)) {
+            qDebug() << "CalculateChecksum 3";
             QCryptographicHash hash(QCryptographicHash::Sha256);
+            qDebug() << "CalculateChecksum 4";
             if (m_fileChecksumSizeBytes > 0) {
                 hash.addData(file.read(m_fileChecksumSizeBytes));
             } else {
                 hash.addData(&file);
             }
+            qDebug() << "CalculateChecksum 5";
             return hash.result();
         }
+        qDebug() << "CalculateChecksum 6";
         return {};
     });
 }
