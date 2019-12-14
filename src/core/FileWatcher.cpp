@@ -77,6 +77,7 @@ qDebug() << "FileWatcher 2";
     m_fileChecksumSizeBytes = checksumSizeKibibytes * 1024;
     qDebug() << "FileWatcher 6.5";
     m_fileChecksum = calculateChecksum();
+    qDebug() << "CalculateChecksum :" << m_fileChecksum;
     qDebug() << "FileWatcher 7";
     if (checksumIntervalSeconds > 0) {
         m_fileChecksumTimer.start(checksumIntervalSeconds * 1000);

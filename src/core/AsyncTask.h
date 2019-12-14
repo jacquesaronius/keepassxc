@@ -21,6 +21,7 @@
 #include <QFuture>
 #include <QFutureWatcher>
 #include <QtConcurrent>
+#include <QtDebug>
 
 /**
  * Asynchronously run computations outside the GUI thread.
@@ -50,6 +51,7 @@ namespace AsyncTask
         qDebug("WaitForFuture 5");
         auto x = future.result();
         qDebug("WaitForFuture 6");
+        qDebug() << "x: " << x;
         return x;
     }
 
